@@ -1,0 +1,85 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                                  LL Hedge EA MT5 |
+//|                                       Developer: Forex Robot Easy Team |
+//|                                           Website: forexroboteasy.com |
+//+------------------------------------------------------------------+
+
+// Global variables
+input double lotMultiplier = 1.0;  // Lot multiplier for the Sell Pending Stop order
+input double maxRisk = 0.02;       // Maximum allowed risk per trade
+input double stopLoss = 100.0;     // Stop loss level for each position
+input double takeProfit = 200.0;   // Take profit level for each position
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+    // Add initialization code here
+
+    return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+    // Add deinitialization code here
+}
+
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+    // Implement the MA cross indicator here
+
+    // Check for Buy signal
+    if (BuySignal)
+    {
+        // Place Buy market order
+        double lotSize = CalculateLotSize();
+        OrderSend(Symbol(), OP_BUY, lotSize, Ask, 0, 0, 0, 'Buy Order', 0, 0, Green);
+
+        // Place Sell Pending Stop order
+        double sellPrice = Bid - stopLoss * Point;
+        double sellLotSize = lotSize * lotMultiplier;
+        OrderSend(Symbol(), OP_SELLSTOP, sellLotSize, sellPrice, 0, 0, 0, 'Sell Pending Stop', 0, 0, Red);
+    }
+
+    // Implement position management here
+
+    // Implement risk management here
+
+    // Implement performance monitoring here
+}
+
+//+------------------------------------------------------------------+
+//| Calculate lot size based on account balance and risk parameters  |
+//+------------------------------------------------------------------+
+double CalculateLotSize()
+{
+    double accountBalance = AccountBalance();
+    double lotSize = NormalizeDouble(accountBalance * maxRisk, 2);
+
+    return lotSize;
+}
+
+//+------------------------------------------------------------------+
+//| Custom function to monitor performance                           |
+//+------------------------------------------------------------------+
+void MonitorPerformance()
+{
+    // Implement performance monitoring code here
+}
+
+//+------------------------------------------------------------------+
+//| Custom function to analyze strategy performance                  |
+//+------------------------------------------------------------------+
+void AnalyzeStrategy()
+{
+    // Implement backtesting and optimization code here
+}
+
